@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+    - master
+name: build and push to docker hub
+jobs:
+  build:
+    name: build and push
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - name: build and push to docker hub
+      run: |
+        docker version
+        docker build -t hitian/p4:latest .
+        echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+        docker push hitian/p4
+      env:
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
